@@ -1,0 +1,19 @@
+[package]
+name = "learn-tokio0"
+version = "0.1.0"
+authors = ["Mike Tang <daogangtang@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+tokio = "*"
+futures = "*"
+
+
+
+[[bin]]
+name = "delay_print"
+path = "src/delay_print.rs"
+
+[[bin]]
+name = "interval_print"
+path = "src/interval_print.rs"
