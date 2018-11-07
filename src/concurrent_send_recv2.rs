@@ -15,6 +15,7 @@ type Rx = mpsc::UnboundedReceiver<Vec<u8>>;
 
 struct Server {
     rx0: Rx,
+    tx1: Tx
 }
 
 impl Future for Server {
@@ -27,6 +28,7 @@ impl Future for Server {
             match self.rx0.poll().unwrap() {
                 Async::Ready(Some(msg)) => {
                     println!("--> {:?}", msg);
+                    self.tx1.unbounded_send(msg).unwrap();
                 }
                 _ => break,
             }
@@ -39,6 +41,7 @@ impl Future for Server {
 fn main() {
 
     let (tx0, rx0): (Tx, Rx) = mpsc::unbounded();
+    let (tx1, mut rx1): (Tx, Rx) = mpsc::unbounded();
 
     let task = Interval::new(Instant::now(), Duration::from_millis(1000))
         //.map(move |x| (x, tx0.clone()))
@@ -48,12 +51,20 @@ fn main() {
             tx0.unbounded_send(b"test".to_vec()).unwrap();
             println!("---> instant={:?}", _instant);
 
+            match rx1.poll().unwrap() {
+                Async::Ready(Some(msg)) => {
+                    println!("<=== {:?}", msg);
+                }
+                _ => (),
+            }
+
             Ok(())
         })
         .map_err(|e| panic!("interval errored; err={:?}", e));
 
     let server = Server {
         rx0: rx0,
+        tx1: tx1
     }
     .map_err(|e| println!("errored; err={:?}", e));
 

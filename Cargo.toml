@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 tokio = "*"
 futures = "*"
-
+bytes = "*"
 
 
 [[bin]]
@@ -17,3 +17,27 @@ path = "src/delay_print.rs"
 [[bin]]
 name = "interval_print"
 path = "src/interval_print.rs"
+
+[[bin]]
+name = "delay_seq_print"
+path = "src/delay_seq_print.rs"
+
+[[bin]]
+name = "concurrent_interval_print"
+path = "src/concurrent_interval_print.rs"
+
+[[bin]]
+name = "futures_select"
+path = "src/futures_select.rs"
+
+[[bin]]
+name = "echo_udp"
+path = "src/echo_udp.rs"
+
+[[bin]]
+name = "concurrent_send_recv"
+path = "src/concurrent_send_recv.rs"
+
+[[bin]]
+name = "concurrent_send_recv2"
+path = "src/concurrent_send_recv2.rs"
