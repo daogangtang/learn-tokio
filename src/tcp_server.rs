@@ -26,15 +26,15 @@ fn main() {
             let framed = BytesCodec::new().framed(socket);
             let (sink, stream) = framed.split();
 
-            let a_stream = stream.and_then(|bytes|{
+            let a_stream = stream.map(|bytes|{
                 println!("bytes: {:?}", bytes);
                 let when = Instant::now() + Duration::from_millis(1000);
                 let a_task = Delay::new(when)
                     .and_then(|_| {
                         println!("start delay!");
                         Ok("welcome, guy!".into())
-                    });
-                    //.map_err(|e| println!("delay errored; err={:?}", e));
+                    })
+                    .map_err(|e| {println!("delay errored; err={:?}", e); e});
             
                 a_task
             })
