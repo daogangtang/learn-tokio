@@ -5,9 +5,10 @@ authors = ["Mike Tang <daogangtang@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-tokio = "*"
 futures = "*"
 bytes = "*"
+tokio = "*"
+tokio-codec = "*"
 
 
 [[bin]]
@@ -41,3 +42,14 @@ path = "src/concurrent_send_recv.rs"
 [[bin]]
 name = "concurrent_send_recv2"
 path = "src/concurrent_send_recv2.rs"
+
+[[bin]]
+name = "print_each_packet"
+path = "src/print_each_packet.rs"
+
+[[bin]]
+name = "print_lines"
+path = "src/print_lines.rs"
+
+
+
