@@ -9,8 +9,6 @@ use std::net::SocketAddr;
 use tokio::codec::BytesCodec;
 use tokio::codec::Decoder;
 use std::time::{Duration, Instant};
-use tokio::timer::Delay;
-
 
 fn main() {
     
@@ -26,26 +24,15 @@ fn main() {
             let framed = BytesCodec::new().framed(socket);
             let (sink, stream) = framed.split();
 
-            let a_stream = stream.and_then(|bytes|{
+            let a_stream = stream.map(|bytes| {
                 println!("bytes: {:?}", bytes);
-                let when = Instant::now() + Duration::from_millis(1000);
-                let a_task = Delay::new(when)
-                    .and_then(|_| {
-                        println!("start delay!");
-                        Ok("welcome, guy!".into())
-                    })
-                    .map_err(|e| println!("delay errored; err={:?}", e));
-            
-                a_task
-            })
-            .map(|_| ())
-            .map_err(|e| println!("{:?}", e));
+                "welcome, guy!".into()
+            });
+            let a = sink.send_all(a_stream);
 
-            let a = sink.send_all(a_stream)
+            tokio::spawn(a
                          .map(|_| ())
-                         .map_err(|e| println!("==> {:?}", e));
-
-            tokio::spawn(a)
+                         .map_err(|e| println!("==> {:?}", e)))
         });
 
     tokio::run(task);
