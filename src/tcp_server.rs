@@ -33,8 +33,8 @@ fn main() {
                     .and_then(|_| {
                         println!("start delay!");
                         Ok("welcome, guy!".into())
-                    })
-                    .map_err(|e| println!("delay errored; err={:?}", e));
+                    });
+                    //.map_err(|e| println!("delay errored; err={:?}", e));
             
                 a_task
             })

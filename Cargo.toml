@@ -60,3 +60,7 @@ path = "src/tcp_client.rs"
 name = "tcp_server"
 path = "src/tcp_server.rs"
 
+[[bin]]
+name = "tcp_server3"
+path = "src/tcp_server3.rs"
+
