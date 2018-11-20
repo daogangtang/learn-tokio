@@ -2,6 +2,7 @@ use futures::future::Future;
 use futures::sink::Sink;
 use futures::stream::Stream;
 
+
 fn main() {
     let addr = std::env::args()
         .nth(1)
@@ -19,17 +20,19 @@ fn main() {
             let (sink, stream) = framed.split();
 
             let a_stream = stream
-                .map(|bytes| {
-                    println!("bytes: {:?}", bytes);
-                    println!("start delay!");
-                    tokio::timer::Delay::new(
-                        std::time::Instant::now() + std::time::Duration::from_millis(1000),
-                        )
-                })
-            .map(|_| {
-                "welcome, guy!".into()
+            .map(|bytes| {
+                println!("bytes: {:?}", bytes);
+                println!("start delay!");
+                tokio::timer::Delay::new(
+                    std::time::Instant::now() + std::time::Duration::from_millis(1000),
+                    )
+                    .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, "oh no!"))
             })
-            .map_err(|e| { println!("delay errored; err={:?}", e); e });
+            .and_then(|delay| {
+                delay.and_then(|_|{
+                    Ok("welcome, guy!".into())
+                })
+            });
 
             let a = sink
                 .send_all(a_stream)
